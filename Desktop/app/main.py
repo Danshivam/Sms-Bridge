@@ -7,8 +7,11 @@ app = FastAPI(
 )
 
 
-class TestMessage(BaseModel):
+class NotificationMessage(BaseModel):
+    app: str
+    title: str
     message: str
+    timestamp: int
 
 
 @app.get("/")
@@ -19,12 +22,16 @@ def home():
     }
 
 
-@app.post("/message")
-def receive_message(message: TestMessage):
+@app.post("/notification")
+def receive_notification(notification: NotificationMessage):
 
     print("\n==============================")
-    print("Received from Android")
-    print(message.message)
+    print("Notification Received")
+    print("==============================")
+    print(f"App      : {notification.app}")
+    print(f"Title    : {notification.title}")
+    print(f"Message  : {notification.message}")
+    print(f"Time     : {notification.timestamp}")
     print("==============================\n")
 
     return {
