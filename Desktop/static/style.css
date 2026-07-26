@@ -1,0 +1,41 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f3f5f7;
+    margin:40px;
+}
+
+.card{
+    background:white;
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.app{
+    color:#1976d2;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.title{
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.message{
+    margin-top:10px;
+}
+
+.time{
+    color:gray;
+    font-size:12px;
+    margin-top:12px;
+}
+
+.header{
+    padding: 20px;
+    background: #e9c2e7;
+    color: rgb(36, 167, 219);
+    font-size: 30px;
+}

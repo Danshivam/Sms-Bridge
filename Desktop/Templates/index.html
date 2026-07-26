@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SMS Bridge</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css">
+</head>
+
+
+<body>
+<div class="header">
+    <h1>SMS Bridge 😋</h1>
+</div>
+
+{% for notification in notifications %}
+
+<div class="card">
+
+    <div class="app">
+        {{ notification.app }}
+    </div>
+
+    <div class="title">
+        {{ notification.title }}
+    </div>
+
+    <div class="message">
+        {{ notification.message }}
+    </div>
+
+    <div class="time">
+        {{ notification.timestamp }}
+    </div>
+
+</div>
+{% endfor %}
+
+
+<script>
+
+const socket = new WebSocket("ws://192.168.1.5:8000/ws");
+
+socket.onopen = () => {
+    console.log("Connected to WebSocket");
+};
+
+socket.onclose = () => {
+    console.log("Disconnected");
+};
+
+socket.onerror = (error) => {
+    console.error(error);
+};
+
+socket.onmessage = (event) => {
+    console.log("Server says:", event.data);
+};
+
+</script>
+
+</body>
+
+</html>
