@@ -5,3 +5,7 @@ class NotificationMessage(BaseModel):
     title: str
     message: str
     timestamp: int
+    formatted_time: str | None = None
+
+    otp: str | None = None
+    is_otp: bool = False

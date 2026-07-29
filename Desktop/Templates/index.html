@@ -11,11 +11,27 @@
 
 
 <body>
+
 <div class="header">
-    <h1>SMS Bridge 😋</h1>
+    
+    <div class="logo">
+        SMS Bridge 😋
+    </div>
+
+    <div class="status">
+        🟢 Connected
+    </div>
+
 </div>
 
-{% for notification in notifications %}
+<h2 id="count">
+    Notifications
+</h2>
+
+
+
+<div id="notifications">
+{% for notification in notifications | reverse %}
 
 <div class="card">
 
@@ -32,16 +48,17 @@
     </div>
 
     <div class="time">
-        {{ notification.timestamp }}
+    🕒 {{ notification.formatted_time }}
     </div>
 
 </div>
 {% endfor %}
 
+</div>
 
 <script>
 
-const socket = new WebSocket("ws://192.168.1.5:8000/ws");
+const socket = new WebSocket("ws://192.168.1.7:8000/ws");
 
 socket.onopen = () => {
     console.log("Connected to WebSocket");
@@ -56,7 +73,79 @@ socket.onerror = (error) => {
 };
 
 socket.onmessage = (event) => {
-    console.log("Server says:", event.data);
+
+    const notification = JSON.parse(event.data);
+
+    console.log(notification);
+
+    const container = document.getElementById("notifications");
+
+
+    const card = document.createElement("div");
+
+    card.className = "card";
+
+
+    if (notification.is_otp) {
+
+    card.innerHTML = `
+        <div class="app">🔐 OTP</div>
+
+        <div class="title">${notification.title}</div>
+
+        <div class="message"
+             style="font-size:34px;
+                    font-weight:bold;
+                    color:#18a558;
+                    letter-spacing:3px;">
+            ${notification.otp}
+        </div>
+
+        <button class="copy-btn" title="Copy OTP">
+            ⧉
+        </button>
+
+        <div class="time">
+            🕒 ${notification.formatted_time}
+        </div>
+    `;
+
+} else {
+
+    card.innerHTML = `
+        <div class="app">${notification.app}</div>
+
+        <div class="title">${notification.title}</div>
+
+        <div class="message">${notification.message}</div>
+
+        <div class="time">
+            🕒 ${notification.formatted_time}
+        </div>
+    `;
+
+}
+
+if (notification.is_otp) {
+
+    const button = card.querySelector(".copy-btn");
+
+    button.onclick = () => {
+
+        navigator.clipboard.writeText(notification.otp);
+
+        button.innerText = "✓";
+
+        setTimeout(() => {
+            button.innerText = "⧉";
+        }, 1500);
+
+    };
+
+}
+
+    container.prepend(card);
+
 };
 
 </script>

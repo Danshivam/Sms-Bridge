@@ -3,13 +3,24 @@ from .models import NotificationMessage
 from .storage import notifications
 from fastapi import WebSocket, WebSocketDisconnect
 from .websocket.manager import manager
+from .utils import format_timestamp
+from .analyzer import extract_otp
 
 router = APIRouter()
 
 @router.post("/notification")
-def receive_notification(notification: NotificationMessage):
+async def receive_notification(notification: NotificationMessage):
+
+    notification.formatted_time = format_timestamp(notification.timestamp)
+
+    otp = extract_otp(notification.message)
+
+    if otp:
+        notification.otp = otp
+        notification.is_otp = True
 
     notifications.append(notification)
+    await manager.send_notification(notification)
 
     print("\n==============================")
     print("Notification Received")
@@ -28,7 +39,7 @@ def receive_notification(notification: NotificationMessage):
 async def websocket_endpoint(websocket: WebSocket):
 
     await manager.connect(websocket)
-    await manager.send_text("Hello Browser 👋")
+    # await manager.send_text("Hello Browser 👋")
 
     print("🟩 Browser Connected")
 

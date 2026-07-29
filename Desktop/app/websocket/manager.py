@@ -1,4 +1,5 @@
 from fastapi import WebSocket
+import json
 
 
 class ConnectionManager:
@@ -18,5 +19,22 @@ class ConnectionManager:
         for connection in self.connections:
             await connection.send_text(message)
 
+    async def send_notification(self, notification):
+
+        data = {
+            "app": notification.app,
+            "title": notification.title,
+            "message": notification.message,
+            "timestamp": notification.timestamp,
+            "formatted_time": notification.formatted_time,
+
+            "otp": notification.otp,
+            "is_otp": notification.is_otp
+                }
+
+        message = json.dumps(data)
+
+        for connection in self.connections:
+            await connection.send_text(message)
 
 manager = ConnectionManager()
