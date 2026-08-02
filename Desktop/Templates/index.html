@@ -31,32 +31,15 @@
 
 
 <div id="notifications">
-{% for notification in notifications | reverse %}
 
-<div class="card">
-
-    <div class="app">
-        {{ notification.app }}
-    </div>
-
-    <div class="title">
-        {{ notification.title }}
-    </div>
-
-    <div class="message">
-        {{ notification.message }}
-    </div>
-
-    <div class="time">
-    🕒 {{ notification.formatted_time }}
-    </div>
 
 </div>
-{% endfor %}
 
-</div>
 
 <script>
+
+const notifications = {{ notifications_json | safe }};
+    
 
 const socket = new WebSocket("ws://192.168.1.7:8000/ws");
 
@@ -72,79 +55,90 @@ socket.onerror = (error) => {
     console.error(error);
 };
 
-socket.onmessage = (event) => {
 
-    const notification = JSON.parse(event.data);
-
-    console.log(notification);
+function createNotificationCard(notification){
 
     const container = document.getElementById("notifications");
-
 
     const card = document.createElement("div");
 
     card.className = "card";
 
+    if(notification.is_otp){
 
-    if (notification.is_otp) {
+        card.innerHTML = `
+            <div class="app">You got an OTP</div>
 
-    card.innerHTML = `
-        <div class="app">🔐 OTP</div>
+            <div class="title">${notification.title}</div>
 
-        <div class="title">${notification.title}</div>
+            <div class="message"
+                style="
+                font-size:34px;
+                font-weight:bold;
+                color:#18a558;
+                letter-spacing:3px;
+                ">
+                ${notification.otp}
+            </div>
 
-        <div class="message"
-             style="font-size:34px;
-                    font-weight:bold;
-                    color:#18a558;
-                    letter-spacing:3px;">
-            ${notification.otp}
-        </div>
+            <button class="copy-btn">
+                ⧉
+            </button>
 
-        <button class="copy-btn" title="Copy OTP">
-            ⧉
-        </button>
+            <div class="time">
+                🕒 ${notification.formatted_time}
+            </div>
+        `;
 
-        <div class="time">
-            🕒 ${notification.formatted_time}
-        </div>
-    `;
+        const button = card.querySelector(".copy-btn");
 
-} else {
+        button.onclick = () => {
 
-    card.innerHTML = `
-        <div class="app">${notification.app}</div>
+            navigator.clipboard.writeText(notification.otp);
 
-        <div class="title">${notification.title}</div>
+            button.innerText = "✓";
 
-        <div class="message">${notification.message}</div>
+            setTimeout(() => {
 
-        <div class="time">
-            🕒 ${notification.formatted_time}
-        </div>
-    `;
+                button.innerText = "⧉";
 
-}
+            },1500);
 
-if (notification.is_otp) {
+        };
 
-    const button = card.querySelector(".copy-btn");
+    }
 
-    button.onclick = () => {
+    else{
 
-        navigator.clipboard.writeText(notification.otp);
+        card.innerHTML = `
+            <div class="app">${notification.app}</div>
 
-        button.innerText = "✓";
+            <div class="title">${notification.title}</div>
 
-        setTimeout(() => {
-            button.innerText = "⧉";
-        }, 1500);
+            <div class="message">${notification.message}</div>
 
-    };
+            <div class="time">
+                🕒 ${notification.formatted_time}
+            </div>
+        `;
 
-}
+    }
 
     container.prepend(card);
+
+}
+
+notifications.forEach(notification => {
+
+    createNotificationCard(notification);
+
+});
+
+socket.onmessage = (event)=>{
+
+    const notification = JSON.parse(event.data);
+
+    createNotificationCard(notification);
 
 };
 
