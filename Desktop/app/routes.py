@@ -5,6 +5,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 from .websocket.manager import manager
 from .utils import format_timestamp
 from .analyzer import extract_otp
+from .database.repository import save_notification
 
 router = APIRouter()
 
@@ -19,7 +20,10 @@ async def receive_notification(notification: NotificationMessage):
         notification.otp = otp
         notification.is_otp = True
 
-    notifications.append(notification)
+    save_notification(notification)                    #saves notification then send to server
+
+    notifications.append(notification)                 #appends notification into the server | no storage
+
     await manager.send_notification(notification)
 
     print("\n==============================")
