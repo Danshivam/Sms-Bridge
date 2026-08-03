@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .models import NotificationMessage
+from .database.models import NotificationMessage
 from .storage import notifications
 from fastapi import WebSocket, WebSocketDisconnect
 from .websocket.manager import manager
