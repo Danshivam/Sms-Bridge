@@ -5,6 +5,7 @@ from .routes import router
 from .storage import notifications
 from fastapi.staticfiles import StaticFiles
 import json
+from app.database.repository import get_notifications
 
 
 app = FastAPI(
@@ -22,6 +23,8 @@ app.include_router(router)
 
 @app.get("/")
 def home(request: Request):
+
+    notifications = get_notifications()
 
     return templates.TemplateResponse(
         request=request,

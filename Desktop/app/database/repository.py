@@ -24,22 +24,24 @@ connection.commit()    # Save these changes permanently.
 
 def get_notifications():
     cursor.execute("""
-SELECT *
-FROM notifications
-ORDER BY timestamp DESC
-""")
+        SELECT *
+        FROM notifications
+        ORDER BY timestamp DESC
+        """)
 
-rows = cursor.fetchall()
+    rows = cursor.fetchall()
 
-notifications = []
+    notifications = []
 
-for row in rows:
+    for row in rows:
 
-    notification = NotificationMessage(
-        app=row[1],
-        title=row[2],
-        message=row[3],
-        timestamp=row[4]
-    )
+        notification = NotificationMessage(
+            app=row[1],
+            title=row[2],
+            message=row[3],
+            timestamp=row[4]
+        )
 
-    notifications.append(notification)
+        notifications.append(notification)
+
+    return notifications 

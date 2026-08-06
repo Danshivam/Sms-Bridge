@@ -22,7 +22,7 @@ async def receive_notification(notification: NotificationMessage):
 
     save_notification(notification)                    #saves notification then send to server
 
-    notifications.append(notification)                 #appends notification into the server | no storage
+    #notifications.append(notification)                 #appends notification into the server | no storage
 
     await manager.send_notification(notification)
 
