@@ -1,28 +1,36 @@
-from .database import connection, cursor
+from .database import get_connection
 from ..models import NotificationMessage
 
 print("Repository Loaded")
 
 def save_notification(notification):
-    
-    cursor.execute("""
-INSERT INTO notifications (
-    app,
-    title,
-    message,
-    timestamp
-)
-VALUES (?, ?, ?, ?)
-""", (
-    notification.app,
-    notification.title,
-    notification.message,
-    notification.timestamp
-))
 
-connection.commit()    # Save these changes permanently.
+    connection, cursor = get_connection()
+
+    try:
+        cursor.execute("""
+            INSERT INTO notifications (
+                app,
+                title,
+                message,
+                timestamp
+            )
+            VALUES (?, ?, ?, ?)
+            """, (
+            notification.app,
+            notification.title,
+            notification.message,
+            notification.timestamp
+            )
+        )
+
+        connection.commit()    # Save these changes permanently.
+
+    finally:
+        connection.close()
 
 def get_notifications():
+    
     cursor.execute("""
         SELECT *
         FROM notifications
