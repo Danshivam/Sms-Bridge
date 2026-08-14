@@ -29,27 +29,34 @@ def save_notification(notification):
     finally:
         connection.close()
 
+
 def get_notifications():
-    
-    cursor.execute("""
+
+    connection, cursor = get_connection()
+
+    try:
+        cursor.execute(""" 
         SELECT *
         FROM notifications
         ORDER BY timestamp DESC
         """)
 
-    rows = cursor.fetchall()
+        rows = cursor.fetchall()
+        notifications = []
 
-    notifications = []
+        for row in rows:
+        
+            notification = NotificationMessage(
+                app=row[1],
+                title=row[2],
+                message=row[3],
+                timestamp=row[4]
+            )
+            notifications.append(notification)
+            
+        return notifications
+         
 
-    for row in rows:
+    finally:
 
-        notification = NotificationMessage(
-            app=row[1],
-            title=row[2],
-            message=row[3],
-            timestamp=row[4]
-        )
-
-        notifications.append(notification)
-
-    return notifications 
+        connection.close()
