@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from .models import NotificationMessage
-from .storage import notifications
 from fastapi import WebSocket, WebSocketDisconnect
 from .websocket.manager import manager
 from .utils import format_timestamp
@@ -22,7 +21,6 @@ async def receive_notification(notification: NotificationMessage):
 
     save_notification(notification)                    #saves notification then send to server
 
-    #notifications.append(notification)                 #appends notification into the server | no storage
 
     await manager.send_notification(notification)
 
