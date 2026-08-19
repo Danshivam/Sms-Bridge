@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from .models import NotificationMessage
 from fastapi import WebSocket, WebSocketDisconnect
 from .websocket.manager import manager
-from .utils import format_timestamp
+from .utils import format_timestamp, get_date_group
 from .analyzer import extract_otp
 from .database.repository import save_notification
 
@@ -12,6 +12,8 @@ router = APIRouter()
 async def receive_notification(notification: NotificationMessage):
 
     notification.formatted_time = format_timestamp(notification.timestamp)
+
+    notification.date_group = get_date_group(notification.timestamp)
 
     otp = extract_otp(notification.message)
 

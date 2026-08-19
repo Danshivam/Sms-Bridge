@@ -1,6 +1,6 @@
 from .database import get_connection
 from ..models import NotificationMessage
-from ..utils import format_timestamp
+from ..utils import format_timestamp, get_date_group
 from ..analyzer import extract_otp
 
 print("Repository Loaded")
@@ -54,10 +54,9 @@ def get_notifications():
                 title=row["title"],
                 message=row["message"],
                 timestamp=row["timestamp"],
-                formatted_time=format_timestamp(row["timestamp"]
-                                                
+                formatted_time=format_timestamp(row["timestamp"]),
+                date_group=get_date_group(row["timestamp"])                                                      
             )
-)
             
             otp = extract_otp(notification.message)
 

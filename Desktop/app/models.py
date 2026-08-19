@@ -6,6 +6,6 @@ class NotificationMessage(BaseModel):
     message: str
     timestamp: int
     formatted_time: str | None = None
-
+    date_group: str | None = None
     otp: str | None = None
     is_otp: bool = False

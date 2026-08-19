@@ -51,10 +51,24 @@ socket.onerror = (error) => {
     console.error(error);
 };
 
+let lastDateGroup = null;
 
 function createNotificationCard(notification){
 
     const container = document.getElementById("notifications");
+
+    if (notification.date_group !== lastDateGroup) {
+
+        const dateGroup = document.createElement("div");
+
+        dateGroup.className = "date-group";
+
+        dateGroup.textContent = notification.date_group.toUpperCase();
+
+        container.appendChild(dateGroup);
+
+        lastDateGroup = notification.date_group;
+    }
 
     const card = document.createElement("div");
 
