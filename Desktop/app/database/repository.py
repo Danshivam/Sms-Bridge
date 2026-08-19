@@ -49,12 +49,15 @@ def get_notifications():
         for row in rows:
         
             notification = NotificationMessage(
-                app=row[1],
-                title=row[2],
-                message=row[3],
-                timestamp=row[4],
-                formatted_time = format_timestamp(row[4])   
+
+                app=row["app"],
+                title=row["title"],
+                message=row["message"],
+                timestamp=row["timestamp"],
+                formatted_time=format_timestamp(row["timestamp"]
+                                                
             )
+)
             
             otp = extract_otp(notification.message)
 
